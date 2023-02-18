@@ -1,7 +1,6 @@
 # Week 0 — Billing and Architecture
 
-Checklist:
-   
+## Instructional Completion   
 | TASK | COMPLETED |
 |  --- |    ---    |
 | Watched Live - Streamed Video | :heavy_check_mark: |
@@ -16,6 +15,32 @@ Checklist:
 | Create a Billing Alarm | :heavy_check_mark: |
 | Create a Budget | :heavy_check_mark: |
 
+## Homework Challenges Completion
+
+| TASK | COMPLETED |
+|  --- |    ---    |
+| Destroy your root account credentials, Set MFA, IAM role | :heavy_check_mark: ![root credentials](../_docs/assets/wk0-hwc0.png)|
+| Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue | :heavy_check_mark: See Homework Challenge notes|
+| Review all the questions of each pillars in the Well Architected Tool (No specialized lens) | :heavy_check_mark: See Homework Challenge notes|
+| Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts | :heavy_check_mark: See Homework Challenge notes|
+| Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility | :heavy_check_mark:  See Homework Challenge notes|
+| Open a support ticket and request a service limit | :heavy_check_mark: ![support ticket](../_docs/assets/wk0-hwc1.png) |
+
+### Homework Challenge notes
+
+For Architecture pillars:
+
+Making use of AWS Organizations with environment based OUs so it would be easier to do audits based on accounts, each OU has an central account that member accounts can assume roles to so all access permissions can be controled by editing permissions within the OU central account.
+
+Making use of API Gateway so the architecture could be more flexible when we need to add new serviecs that may not be in python under the same API and Coginto for easier implementation of authentication
+
+Originally wanted to use DynamoDB TTL to simplify implementing ephemeral messaging feature, realized it only offers precision to the hour but not minutes precision so looked into EventBridge. Turns out EventBridge does support precision down to the minutes. AppSync allows lambda resolvers so we could schedule a job with a expire timestamp of the message when creating the mutation event.
+
+Had concern about AWS Organization allowing only 1 account to enjoy the Free tier benefits, but realized with the ECS free tier and other services free tier quota the team should be fine. If free tier is not enough for the AWS Organization we could each share our resources through RAM to pool them together but the architecture would be unnecessarily complex. All resources used in the [design](https://lucid.app/documents/view/f7e59b81-605f-4131-af03-1657c3f03f6e) has free tier quota
+
+
+
+## Notes
 ### Install AWS CLI in GitPod
 Update our `.gitpod.yml` to include the following task.
 
