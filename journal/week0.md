@@ -1,7 +1,6 @@
 # Week 0 — Billing and Architecture
 
-Checklist:
-   
+## Instructional Completion   
 | TASK | COMPLETED |
 |  --- |    ---    |
 | Watched Live - Streamed Video | :heavy_check_mark: |
@@ -16,6 +15,19 @@ Checklist:
 | Create a Billing Alarm | :heavy_check_mark: |
 | Create a Budget | :heavy_check_mark: |
 
+## Homework Challenges Completion
+
+| TASK | COMPLETED |
+|  --- |    ---    |
+| Destroy your root account credentials, Set MFA, IAM role | :heavy_check_mark: ![root credentials](../_docs/assets/wk0-hwc0.png)|
+| Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue | :heavy_check_mark: |
+| Review all the questions of each pillars in the Well Architected Tool (No specialized lens) | :heavy_check_mark: |
+| Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts | :heavy_check_mark: |
+| Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility | :heavy_check_mark: |
+| Open a support ticket and request a service limit | :heavy_check_mark: ![support ticket](../_docs/assets/wk0-hwc1.png) |
+
+
+## Notes
 ### Install AWS CLI in GitPod
 Update our `.gitpod.yml` to include the following task.
 
