@@ -15,7 +15,10 @@ export default function HomeFeedPage() {
   const [popped, setPopped] = React.useState(false);
   const [poppedReply, setPoppedReply] = React.useState(false);
   const [replyActivity, setReplyActivity] = React.useState({});
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState({
+    display_name: 'allanhsu',
+    handle: 'allanhsu',
+  });
   const dataFetchedRef = React.useRef(false);
 
   const loadData = async () => {
