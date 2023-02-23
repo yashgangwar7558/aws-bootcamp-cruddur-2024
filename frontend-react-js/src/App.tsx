@@ -13,6 +13,7 @@ import {
   createBrowserRouter,
   RouterProvider
 } from "react-router-dom";
+import { NotificationsPage } from './pages/NotificationsPage';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/@:handle",
     element: <UserFeedPage />
+  },
+  {
+    path: "/notifications",
+    element: <NotificationsPage />
   },
   {
     path: "/messages",
