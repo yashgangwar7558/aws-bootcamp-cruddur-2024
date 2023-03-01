@@ -90,6 +90,13 @@ OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
 OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
 OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
 ```
+We will need to setup env variables for gitpod or local env
+```
+export HONEYCOMB_API_KEY=""
+export HONEYCOMB_SERVICE_NAME="Cruddur"
+gp env HONEYCOMB_API_KEY=""
+gp env HONEYCOMB_SERVICE_NAME="Cruddur"
+```
 
 ### CloudWatch
 Add to the requirements.txt
@@ -206,4 +213,37 @@ Check the service for the last 10 minutes
 ```
 EPOCH=$(date +%s)
 aws xray get-service-graph --start-time $(($EPOCH-600)) --end-time $EPOCH
+```
+
+### Rollbar
+https://rollbar.com/
+
+Create a new project in Rollbar called Cruddur
+
+Add to `requirements.txt`
+```
+blinker
+rollbar
+```
+Install deps
+```
+pip install -r requirements.txt
+```
+We need to set our access token
+```
+export ROLLBAR_ACCESS_TOKEN=""
+gp env ROLLBAR_ACCESS_TOKEN=""
+```
+
+Add to backend-flask for docker-compose.yml
+```
+ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
+```
+
+Add an endpoint for testing rollbar:
+```
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
 ```
