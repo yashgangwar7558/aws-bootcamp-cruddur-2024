@@ -8,3 +8,5 @@ opentelemetry-instrumentation-flask
 opentelemetry-instrumentation-requests
 # AWS cloudwatch
 watchtower
+# AWS X-Ray
+aws-xray-sdk

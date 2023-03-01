@@ -136,3 +136,74 @@ Set the env var in `docker-compose.yml` or `.env` if you use local development:
     AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
 ```
 * passing AWS_REGION doesn't seems to get picked up by boto3 so pass default region instead
+
+
+### AWS X-Ray
+Instrument AWS X-Ray for Flask
+
+```
+export AWS_REGION="ca-central-1"
+gp env AWS_REGION="ca-central-1"
+```
+Add to `requirements.txt`
+```
+aws-xray-sdk
+```
+Install depedencies
+```
+pip install -r requirements.txt
+```
+
+Add a sampling rule file `aws/json/xray.json` that will be used by X-Ray to be fed into CLI later to setup X-Ray
+```
+{
+  "SamplingRule": {
+      "RuleName": "Cruddur",
+      "ResourceARN": "*",
+      "Priority": 9000,
+      "FixedRate": 0.1,
+      "ReservoirSize": 5,
+      "ServiceName": "Cruddur",
+      "ServiceType": "*",
+      "Host": "*",
+      "HTTPMethod": "*",
+      "URLPath": "*",
+      "Version": 1
+  }
+}
+```
+Use AWS CLI to create a group for X-ray then create sampling rule
+```
+FLASK_ADDRESS="https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+aws xray create-group \
+   --group-name "Cruddur" \
+   --filter-expression "service(\"$FLASK_ADDRESS\") {fault OR error}"
+aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json
+```
+[Install X-Ray daemon](https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html)
+[X-Ray Daemon Github](https://github.com/aws/aws-xray-daemon)
+[X-Ray Docker Compose](https://github.com/marjamis/xray/blob/master/docker-compose.yml)
+
+Add Daemon Service to Docker compose
+```
+xray-daemon:
+    image: "amazon/aws-xray-daemon"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "ca-central-1"
+    command:
+      - "xray -o -b xray-daemon:2000"
+    ports:
+      - 2000:2000/udp
+```
+We need to add these two env vars to our backend-flask in our docker-compose.yml file
+```
+    AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
+    AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
+```
+Check the service for the last 10 minutes
+```
+EPOCH=$(date +%s)
+aws xray get-service-graph --start-time $(($EPOCH-600)) --end-time $EPOCH
+```
