@@ -1,2 +1,10 @@
 flask
 flask-cors
+python-dotenv
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
+opentelemetry-instrumentation-flask
+opentelemetry-instrumentation-requests
+# AWS cloudwatch
+watchtower
