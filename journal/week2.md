@@ -1,6 +1,6 @@
 # Week 2 — Distributed Tracing
 
-## Homework
+## Homework & Challenges
    
 | TASK | COMPLETED |
 |  --- |    ---    |
@@ -93,10 +93,13 @@ OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
 We will need to setup env variables for gitpod or local env
 ```
 export HONEYCOMB_API_KEY=""
-export HONEYCOMB_SERVICE_NAME="Cruddur"
+export HONEYCOMB_SERVICE_NAME="cruddur-api-otl-service"
 gp env HONEYCOMB_API_KEY=""
-gp env HONEYCOMB_SERVICE_NAME="Cruddur"
+gp env HONEYCOMB_SERVICE_NAME="cruddur-api-otl-service"
 ```
+Using honeycomb querying for errors, we found argument error `logger` disguised as CORS error in `HomeActivites`
+![HoneyComb](../_docs/assets/wk2-honeycomb.png)
+
 
 ### CloudWatch
 Add to the requirements.txt
@@ -161,7 +164,7 @@ Install depedencies
 pip install -r requirements.txt
 ```
 
-Add a sampling rule file `aws/json/xray.json` that will be used by X-Ray to be fed into CLI later to setup X-Ray
+Add a sampling rule file `aws/json/xray.json` that will be used by X-Ray to be fed into CLI later to setup X-Ray. This can also be setup in code for flask: https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-python-configuration.html#xray-sdk-python-middleware-configuration-code
 ```
 {
   "SamplingRule": {
