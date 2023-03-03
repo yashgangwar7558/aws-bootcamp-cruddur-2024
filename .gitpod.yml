@@ -42,6 +42,8 @@ ports:
     visibility: public
   - port: 8000
     visibility: public
+  - port: 4318
+    visibility: public
 image:
   file: .gitpod.dockerfile
 vscode:

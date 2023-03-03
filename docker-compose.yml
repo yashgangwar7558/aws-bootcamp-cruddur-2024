@@ -5,7 +5,7 @@ services:
       FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
-      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_COLLECTOR_API_KEY}"
       OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
       AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
@@ -27,6 +27,7 @@ services:
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      REACT_APP_OTEL_COLLECTOR_ENDPOINT: "https://4318-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
     build: ./frontend-react-js
     ports:
       - "3000:3000"
@@ -72,6 +73,23 @@ services:
       - "--bind=xray-daemon:2000"
     ports:
       - 2000:2000/udp
+  otel-collector:
+    environment:
+      FRONTEND_URL_HTTPS: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      FRONTEND_URL_HTTP: "http://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      HONEYCOMB_API_KEY: "${HONEYCOMB_API_KEY}"
+    image: otel/opentelemetry-collector
+    command: [ --config=/etc/otel-collector-config.yaml ]
+    volumes:
+      - "./otel-collector-config.yaml:/etc/otel-collector-config.yaml"
+    ports:
+      # - 1888:1888 # pprof extension
+      # - 8888:8888 # Prometheus metrics exposed by the collector
+      # - 8889:8889 # Prometheus exporter metrics
+      # - 13133:13133 # health_check extension
+      # - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      # - 55679:55679 # zpages extension
 
 networks:
   internal-network:
