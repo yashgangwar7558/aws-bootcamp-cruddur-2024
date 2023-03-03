@@ -54,7 +54,7 @@ cors = CORS(
     app,
     resources={r"/api/*": {"origins": origins}},
     expose_headers="location,link",
-    allow_headers="content-type,if-modified-since",
+    allow_headers=["content-type", "if-modified-since", "traceparent"],
     methods="OPTIONS,GET,HEAD,POST"
 )
 
@@ -103,7 +103,7 @@ def rollbar_test():
     rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
 
-
+@xray_recorder.capture('message_groups')
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
     user_handle = 'andrewbrown'
@@ -112,7 +112,6 @@ def data_message_groups():
         return model['errors'], 422
     else:
         return model['data'], 200
-
 
 @app.route("/api/messages/@<string:handle>", methods=['GET'])
 def data_messages(handle):
@@ -127,7 +126,7 @@ def data_messages(handle):
         return model['data'], 200
     return
 
-
+@xray_recorder.capture('messages')
 @app.route("/api/messages", methods=['POST', 'OPTIONS'])
 def data_create_message():
     user_sender_handle = 'andrewbrown'
@@ -142,14 +141,14 @@ def data_create_message():
         return model['data'], 200
     return
 
-
+@xray_recorder.capture('activities_home')
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
     data = HomeActivities.run()
     LOGGER.info('Hello Cloudwatch! from  /api/activities/home')
     return data, 200
 
-
+@xray_recorder.capture('activities_notifications')
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
     data = UserNotifications.run()
@@ -175,7 +174,7 @@ def data_search():
         return model['data'], 200
     return
 
-
+@xray_recorder.capture('activities')
 @app.route("/api/activities", methods=['POST', 'OPTIONS'])
 def data_activities():
     user_handle = 'andrewbrown'
